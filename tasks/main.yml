@@ -1,0 +1,19 @@
+---
+
+  - name: Install latest httpd
+    yum:
+      name= {{ webserver }}
+      state=latest
+  - name: Template a file to /etc/file.conf
+    ansible.builtin.template:
+      src: httpd.conf.j2
+      dest: /etc/httpd/conf/httpd.conf
+    notify:
+      - Start service httpd, if not started
+  - name: Start service httpd, if not started
+    ansible.builtin.service:
+      name={{ webserver }}
+      state=started
+  - name: Print the vars
+    ansible.builtin.debug:
+      msg: Port {{ port }}
